@@ -18,7 +18,5 @@ async function clickbutton(message) {
             X: 0,
             Y: 0
         });
-    } catch {
-        return;
-    }
+    } catch { return; }
 }
