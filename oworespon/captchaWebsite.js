@@ -13,7 +13,7 @@ module.exports = {
                 ];
 
                 if (Captcha.some(captcha => message.content.includes(captcha))) {
-                    auto_solver();
+                    return auto_solver();
                 }
             }
         });
