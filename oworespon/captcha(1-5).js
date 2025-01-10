@@ -12,7 +12,7 @@ module.exports = {
             ];
 
             if (Captcha.some(captcha => message.content.includes(captcha))) {
-                interval.stopping();
+                return interval.stopping();
             }
         });
     }
