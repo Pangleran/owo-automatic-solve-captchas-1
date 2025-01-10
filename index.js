@@ -7,10 +7,7 @@ const fs = require('fs');
 
 const config = require('./config.js');
 
-const client = new Discord.Client({
-    checkUpdate: false,
-    ws: { properties: { $browser: "Discord iOS" }}
-});
+const client = new Discord.Client({ checkUpdate: false });
 
 fs.readdirSync('./commands')
 .filter(file => file.endsWith('.js'))
