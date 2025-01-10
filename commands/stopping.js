@@ -4,7 +4,7 @@ const config = require('../config.js');
 module.exports = {
     async command(client) {
         client.on('messageCreate', async (message) => {
-            if (message.author.id === client.user.id && message.content.toLowerCase() === 'iwo') {
+            if (message.author.id === client.user.id && message.content.toLowerCase() === config.cmdstop) {
                 interval.stopping();
                 config.channelId = '-'
             }
