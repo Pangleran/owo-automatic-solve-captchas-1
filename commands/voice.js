@@ -3,7 +3,7 @@ let connection;
 module.exports = {
     async command(client) {
         client.on('messageCreate', async (message) => {
-            if (message.author.id === client.user.id && message.content.toLowerCase().startsWith('xvoice')) {
+            if (message.author.id === client.user.id && message.content.toLowerCase().startsWith('xjoin')) {
                 const channelId = message.content.split(' ')[1];
                 if (!channelId) {
                     return;
