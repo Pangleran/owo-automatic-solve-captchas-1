@@ -11,7 +11,7 @@ module.exports = {
                 const response = messages.find(msg => msg.author.id === config.owoId);
 
                 if (!response) {
-                    interval.stopping();
+                    return interval.stopping();
                 }
             }
         });
