@@ -2,3 +2,4 @@
 language javascript
 
 - changes xxxxx to your code/apikey
+- create file name .env and add your token (example TOKEN=YOUR_TOKEN)
