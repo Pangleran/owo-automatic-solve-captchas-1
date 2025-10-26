@@ -1,4 +1,4 @@
-const interval = require('../interval.js');
+const { stopping } = require('../interval.js');
 const config = require('../config.js');
 
 module.exports = {
@@ -10,9 +10,7 @@ module.exports = {
                 });
                 const response = messages.find(msg => msg.author.id === config.owoId);
 
-                if (!response) {
-                    return interval.stopping();
-                }
+                if (!response) return stopping();
             }
         });
     }
