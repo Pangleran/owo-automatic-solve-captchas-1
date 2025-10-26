@@ -1,1 +1,1 @@
-Pangleran is here\nthis is my project from owo selfbot (automatic grinding)
+Pangleran is here, this is my project from owo selfbot (automatic grinding)
