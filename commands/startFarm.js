@@ -1,4 +1,4 @@
-const { running } = require('../interval.js');
+const { running } = require('../function.js');
 const config = require('../config.js');
 
 module.exports = {
