@@ -1,4 +1,4 @@
-const interval = require('../interval.js');
+const { running } = require('../interval.js');
 const config = require('../config.js');
 
 module.exports = {
@@ -6,7 +6,7 @@ module.exports = {
         client.on('messageCreate', async (message) => {
             if (message.author.id === client.user.id && message.content.toLowerCase() === config.cmdrun) {
                 config.channelId = message.channel.id;
-                interval.running(client);
+                running(client);
             }
         });
     }
