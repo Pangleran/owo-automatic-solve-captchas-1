@@ -5,18 +5,16 @@ module.exports = {
         client.on('messageCreate', async (message) => {
             if (message.author.id === config.owoId && message.content === `<@${client.user.id}>` && message.embeds.length > 0) {
                 if (message.embeds[0].author.name.includes('challenges you to a duel!')) {
-                    setTimeout(() => clickbutton(message), 5000);
+                    for (const row of message.components) {
+                        for (const component of row.components) {
+                            if (component.type === 'BUTTON' && component.customId === 'battle_accept') {
+                                await new Promise(res => setTimeout(res, 5000));
+                                return message.clickButton(component.customId);
+                            }
+                        }
+                    }
                 }
             }
         });
     }
-}
-
-async function clickbutton(message) {
-    try {
-        await message.clickButton({
-            X: 0,
-            Y: 0
-        });
-    } catch { return; }
 }
