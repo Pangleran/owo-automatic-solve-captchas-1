@@ -1,7 +1,13 @@
 module.exports = {
     owoId: '408785106942164992',
     
-    channelId: '-',
+    channelId: null,
+
+    cmdRun: 'wrun',
+
+    cmdStop: 'ws',
+
+    status: false,
     
-    cookie: 'connect.sid=xxxxx'
+    cookie: null
 }
