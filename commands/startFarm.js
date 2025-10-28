@@ -6,7 +6,11 @@ module.exports = {
         client.on('messageCreate', async (message) => {
             if (message.author.id === client.user.id && message.content.toLowerCase() === config.cmdrun) {
                 cfg.channelId = message.channel.id;
-                awaitrunning(client);
+                cfg.status = true;
+                await Promise.all([
+                    saveConfig(cfg),
+                    running(client);
+                ]);
             }
         });
     }
