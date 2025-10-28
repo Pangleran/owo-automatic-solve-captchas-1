@@ -1,4 +1,4 @@
-const { stopping } = require('../interval.js');
+const { stopping } = require('../function.js');
 const config = require('../config.js');
 
 module.exports = {
