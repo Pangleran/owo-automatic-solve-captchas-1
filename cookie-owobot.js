@@ -49,47 +49,47 @@ async function getCookie() {
     };
     const resp = await client.post(oauthReqStr, payload, { headers: postHeaders });
 
-        if (resp.status !== 200) {
-          console.log('(!) Submit error:', resp.status);
-          return;
-        }
-
-        if (resp.data?.location) {
-          const locauri = resp.data.location;
-          const hosturi = locauri.replace(/^https?:\/\//, '').split('/')[0];
-
-          const getHeaders = {
-            'accept-encoding' : 'gzip, deflate, br',
-            'accept-language' : 'en-US,en;q=0.5',
-            'connection' : 'keep-alive',
-            'host' : hosturi,
-            'referer' : 'https://discord.com/',
-            'sec-fetch-dest' : 'document',
-            'sec-fetch-mode' : 'navigate',
-            'sec-fetch-site' : 'cross-site',
-            'sec-fetch-user' : '?1',
-            'upgrade-insecure-requests' : '1',
-            'user-agent' : postHeaders['User-Agent']
-          };
-
-          const res2 = await client.get(locauri, { headers: getHeaders, maxRedirects: 0, validateStatus: null });
-          const cookieHeader = res2.headers['set-cookie']?.[0];
-          const cookieStr = cookieHeader?.split(';')[0];
-
-          if (res2.status === 302 || res2.status === 307) {
-            cfg.cookie = cookieStr;
-            return saveConfig(cfg);
-          } else {
-            console.log('(-) Failed to add token to OAuth');
-          }
-        } else if (resp.data?.includes?.('You need to verify your account')) {
-          console.log('(!) Invalid token');
-        } else {
-          console.log('(!) Submit error (format respons tak terduga).');
-        }
-      } catch (err) {
-        console.error('(X) Terjadi error:', err.message);
-      }
+    if (resp.status !== 200) {
+      console.log('(!) Submit error:', resp.status);
+      return;
     }
 
-    module.exports = { getCookie };
+    if (resp.data?.location) {
+      const locauri = resp.data.location;
+      const hosturi = locauri.replace(/^https?:\/\//, '').split('/')[0];
+
+      const getHeaders = {
+        'accept-encoding' : 'gzip, deflate, br',
+        'accept-language' : 'en-US,en;q=0.5',
+        'connection' : 'keep-alive',
+        'host' : hosturi,
+        'referer' : 'https://discord.com/',
+        'sec-fetch-dest' : 'document',
+        'sec-fetch-mode' : 'navigate',
+        'sec-fetch-site' : 'cross-site',
+        'sec-fetch-user' : '?1',
+        'upgrade-insecure-requests' : '1',
+        'user-agent' : postHeaders['User-Agent']
+      };
+
+      const res2 = await client.get(locauri, { headers: getHeaders, maxRedirects: 0, validateStatus: null });
+      const cookieHeader = res2.headers['set-cookie']?.[0];
+      const cookieStr = cookieHeader?.split(';')[0];
+
+      if (res2.status === 302 || res2.status === 307) {
+        cfg.cookie = cookieStr;
+        return saveConfig(cfg);
+      } else {
+        console.log('(-) Failed to add token to OAuth');
+      }
+    } else if (resp.data?.includes?.('You need to verify your account')) {
+      console.log('(!) Invalid token');
+    } else {
+      console.log('(!) Submit error (format respons tak terduga).');
+    }
+  } catch (err) {
+    console.error('(X) Terjadi error:', err.message);
+  }
+}
+
+module.exports = { getCookie };
