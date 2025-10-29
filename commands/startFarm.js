@@ -1,17 +1,25 @@
-const { running } = require('../function.js');
+const { running, loadConfig, saveConfig } = require('../function.js');
 const config = require('../config.js');
 
 module.exports = {
-    async command(client) {
+    command(client) {
         client.on('messageCreate', async (message) => {
-            if (message.author.id === client.user.id && message.content.toLowerCase() === config.cmdrun) {
-                cfg.channelId = message.channel.id;
-                cfg.status = true;
-                await Promise.all([
-                    saveConfig(cfg),
+            try {
+                if (message.author.bot) return;
+
+                if (message.author.id === client.user.id && 
+                    message.content.trim().toLowerCase() === config.cmdRun.toLowerCase()) {
+
+                    const cfg = loadConfig() || {};
+                    cfg.channelId = message.channel?.id || null;
+                    cfg.status = true;
+
+                    await saveConfig(cfg);
                     running(client);
-                ]);
+                }
+            } catch (err) {
+                console.error('❌ Terjadi error saat menjalankan startFarm:', err);
             }
         });
     }
-}
+};
