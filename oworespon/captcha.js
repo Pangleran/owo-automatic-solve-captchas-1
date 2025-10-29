@@ -1,0 +1,72 @@
+const { stopping, loadConfig } = require('../function.js');
+const config = require('../config.js');
+const axios = require('axios').default;
+
+module.exports = {
+    async respon(client) {
+        client.on('messageCreate', async (message) => {
+            try {
+                const cfg = loadConfig() || {};
+
+                if (message.author.id !== config.owoId || message.channel.id !== cfg.channelId) return;
+
+                const warnings = [
+                    `⚠️ **|** <@${client.user.id}>!`,
+                    `⚠️ **|** ${client.user.username}!`,
+                    `**⚠️ | <@${client.user.id}>**,`,
+                    `**⚠️ | ${client.user.username}**,`,
+                    `**🚫 | ${client.user.id}**,`,
+                    `**⚠️ |** <@${client.user.id}>,`
+                ];
+
+                if (warnings.some(text => message.content.includes(text))) {
+                    await stopping();
+
+                    const attachment = message.attachments?.first();
+                    if (attachment?.url) {
+                        await solveImage(client, attachment.url);
+                    }
+
+                    if (message.components?.length > 0) {
+                        await solveWebsite();
+                    }
+                }
+            } catch (err) {
+                console.error('❌ Terjadi error saat menangani pesan:', err);
+            }
+        });
+    }
+};
+
+async function solveWebsite() {
+    const options = {
+      method: 'GET',
+      url: 'https://v1.captchaly.com/hcaptcha',
+      headers: {Authorization: 'Bearer CP_ACzYNzjALraVbEbybcBnFhddZiQjBD11VxDRjyEsPrmY'}
+    };
+
+    while (true) {
+        try {
+            const { data } = await axios.request(options);
+            if (data.token) { console.log(data.token) }
+        } catch (error) {
+            if (error.response?.status === 402) return 'not enough balance';
+            await new Promise(res => setTimeout(res, 10000));
+        }
+    }
+}
+
+function replace(text) {
+    return text
+        .toLowerCase()
+        .replace(/0/g, 'o')
+        .replace(/1/g, 'i')
+        .replace(/2/g, 'z')
+        .replace(/3/g, 'e')
+        .replace(/4/g, 'a')
+        .replace(/5/g, 's')
+        .replace(/6/g, 'g')
+        .replace(/7/g, 't')
+        .replace(/8/g, 'b')
+        .replace(/9/g, 'q');
+}
