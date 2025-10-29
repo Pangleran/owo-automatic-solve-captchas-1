@@ -9,11 +9,11 @@ function loadConfig() {
 }
 
 function saveConfig(obj) {
-    fs.writeFileSync(CFg, 'module.exports = ' + JSON.stringify(obj, null, 4) + ':\n', 'utf8');
+    fs.writeFileSync(CFG, 'module.exports = ' + JSON.stringify(obj, null, 4) + '\n', 'utf8');
     delete require.cache[require.resolve(CFG)];
 }
 
-const sleep = (min, max) => return new Promise(res => setTimeout(res, Math.floor(Math.random() * (max - min + 1) + max)));
+const sleep = (min, max) => new Promise(res => setTimeout(res, Math.floor(Math.random() * (max - min + 1) + min)));
 
 async function hunt(client) {
     const cfg = loadConfig();
@@ -22,7 +22,7 @@ async function hunt(client) {
     if (!channel) return;
 
     try {
-        await channel.sendTyping().catch(() => await new Promise(res => setTimeout(res, 2000)));
+        await channel.sendTyping().catch(async () => await new Promise(res => setTimeout(res, 2000)));
         if (cfg.status) await Promise.all([channel.send('owoh'), channel.send('owob')]);
         
         await sleep(15000, 16000);
@@ -40,7 +40,7 @@ async function owo(client) {
     if (!channel) return;
 
     try {
-        await channel.sendTyping().catch(() => await new Promise(res => setTimeout(res, 2000)));
+        await channel.sendTyping().catch(async () => await new Promise(res => setTimeout(res, 2000)));
         if (cfg.status) await channel.send('owo');
 
         await sleep(10000, 11000);
@@ -53,9 +53,8 @@ async function owo(client) {
 
 async function running(client) {
     const cfg = loadConfig();
-    if (cfg.status) return;
     cfg.status = true;
-
+    
     await Promise.all([
         saveConfig(cfg),
         hunt(client),
