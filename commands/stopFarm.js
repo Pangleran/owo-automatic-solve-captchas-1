@@ -1,17 +1,25 @@
-const { stopping } = require('../function.js');
+const { stopping, saveConfig, loadConfig } = require('../function.js');
 const config = require('../config.js');
 
 module.exports = {
-    async command(client) {
+    command(client) {
         client.on('messageCreate', async (message) => {
-            if (message.author.id === client.user.id && message.content.toLowerCase() === config.cmdstop) {
-                cfg.channelId = null;
-                cfg.status = false;
-                await Promise.all([
-                    saveConfig(cfg),
+            try {
+                if (message.author.bot) return;
+
+                if (message.author.id === client.user.id && 
+                    message.content.trim().toLowerCase() === config.cmdStop.toLowerCase()) {
+
+                    const cfg = loadConfig() || {};
+                    cfg.channelId = null;
+                    cfg.status = false;
+
+                    await saveConfig(cfg);
                     stopping();
-                ]);
+                }
+            } catch (err) {
+                console.error('❌ Terjadi error saat menjalankan stopFarm:', err);
             }
         });
     }
-}
+};
