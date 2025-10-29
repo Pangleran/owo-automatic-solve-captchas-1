@@ -2,10 +2,11 @@ console.clear();
 require('dotenv').config();
 
 const Discord = require('discord.js-selfbot-v13');
-const axios = require('axios');
 const fs = require('fs');
+const { running } = require('./function.js');
 
 const config = require('./config.js');
+const { getCookie } = require('./cookie-owobot.js');
 
 const client = new Discord.Client({ checkUpdate: false });
 
@@ -13,13 +14,15 @@ fs.readdirSync('./commands')
 .filter(file => file.endsWith('.js'))
 .forEach(file => require(`./commands/${file}`).command(client));
 
-fs.readdirSync('./oworespon')
+fs.readdirSync('./utils')
 .filter(file => file.endsWith('.js'))
-.forEach(file => require(`./oworespon/${file}`).respon(client));
+.forEach(file => require(`./utils/${file}`).respon(client));
 
-client.login(process.env.token).then(() => {
+client.login(config.token).then(async () => {
+    await getCookie();
     console.log(client.user.tag);
-    require('./error/processError.js').loadError(client);
+    require('./error/errorHandling.js').loadError(client);
+    if (config.status) running(client);
 }).catch((err) => {
     console.clear();
     console.error(err.message);
