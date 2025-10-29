@@ -39,21 +39,45 @@ module.exports = {
 };
 
 async function solveWebsite() {
-    const options = {
-      method: 'GET',
-      url: 'https://v1.captchaly.com/hcaptcha',
-      headers: {Authorization: 'Bearer CP_ACzYNzjALraVbEbybcBnFhddZiQjBD11VxDRjyEsPrmY'}
-    };
+    const cfg = loadConfig();
 
-    while (true) {
-        try {
-            const { data } = await axios.request(options);
-            if (data.token) { console.log(data.token) }
-        } catch (error) {
-            if (error.response?.status === 402) return 'not enough balance';
-            await new Promise(res => setTimeout(res, 10000));
+    try {
+        const solution = await hcaptchaSolve();
+        const solve = await axios.post('https://owobot.com/api/captcha/verify', { token: solution }, { 
+            headers: { Cookie: cfg.cookie }
+        });
+        if (solve.status === 200) {
+            console.log(`${new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Makassar' })} | Solved Captcha`);
+        } else {
+            console.log(`${new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Makassar' })} | Unsolved Captcha`);
         }
+    } catch {
+        console.error('HCaptcha sudah diselesaikan');
+        return;
     }
+}
+
+async function hcaptchaSolve() {
+    const options = {
+        method: 'GET',
+        url: 'https://v1.captchaly.com/hcaptcha?url=https://owobot.com&sitekey=a6a1d5ce-612d-472d-8e37-7601408fbc09',
+        headers: {Authorization: 'Bearer YOURKEY'}
+      };
+
+      while (true) {
+        try {
+          const { data } = await axios.request(options);
+          console.log(`${parseInt(data.duration)} Seconds | HCaptcha Solved`);
+          return data.token;
+        } catch (error) {
+          if (error.response?.status === 400 || error.response?.status === 503) {
+            await new Promise(res => setTimeout(res, 2000));
+          } else {
+            console.error(error.response?.status);
+            return;
+          }
+        }
+      }
 }
 
 function replace(text) {
