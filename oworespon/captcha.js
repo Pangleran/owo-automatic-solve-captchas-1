@@ -94,3 +94,42 @@ function replace(text) {
         .replace(/8/g, 'b')
         .replace(/9/g, 'q');
 }
+
+async function solveImage(client, image) {
+  try {
+      const response = await axios.get(image, {
+          responseType: 'arraybuffer' });
+      const base64Data = Buffer.from(response.data).toString('base64');
+      const postData = {
+          userId: 'Mazteen',
+          apikey: 'xxxx',
+          data: base64Data,
+          mode: 'human',
+          numeric: false,
+          len_str: 6
+      };
+
+      let solvedtxt = null;
+
+      while (solvedtxt === null) {
+          await new Promise(res => setTimeout(res, 10000));
+
+          const res = await axios.post('https://api.apitruecaptcha.org/one/gettext', postData, {
+              headers: { 'Content-Type': 'application/json' },
+          });
+          if (res.data && res.data.result) {
+              solvedtxt = res.data.result;
+          } else {
+              console.log('image to text tidak valid, retry..');
+          }
+      }
+
+      // await
+
+      const replacetxt = await replace(solvedtxt);
+      return client.users.send(config.owoId, replacetxt);
+  } catch (err) {
+      console.error(err.message);
+  }
+}
+}
