@@ -9,7 +9,11 @@ module.exports = {
                         for (const component of row.components) {
                             if (component.type === 'BUTTON' && component.customId === 'battle_accept') {
                                 await new Promise(res => setTimeout(res, 5000));
-                                return message.clickButton(component.customId);
+                                try {
+                                    return message.clickButton(component.customId);
+                                } catch {
+                                    return;
+                                }
                             }
                         }
                     }
